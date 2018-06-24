@@ -13,5 +13,5 @@ let i = 1;
 let slider = setInterval(function () {
     document.getElementById("slider").src = hrefs[i];
     i++
-    if (i === 5) i = 0;
+    if (i === hrefs.length) i = 0;
 }, 5000);

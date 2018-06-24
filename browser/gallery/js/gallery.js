@@ -17,7 +17,7 @@ let i = 0;
 image.src = images[i]
 nextPhoto.onclick = function () {
     i++
-    if(i === 5) i = 0;
+    if(i === images.length) i = 0;
     image.src = images[i]
     
 }
