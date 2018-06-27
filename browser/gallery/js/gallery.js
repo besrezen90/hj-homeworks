@@ -17,13 +17,11 @@ let i = 0;
 image.src = images[i]
 nextPhoto.onclick = function () {
     i++
-    if(i === images.length) i = 0;
-    image.src = images[i]
-    
+    if(i === images.length) i = 0
+    image.src = images[i] 
 }
 prevPhoto.onclick = function () {
     i--
-    if(i < 0) i = 4;
+    if(i < 0) i = images.length - 1
     image.src = images[i]
-    
 }
