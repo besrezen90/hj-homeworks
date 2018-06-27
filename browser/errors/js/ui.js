@@ -5,6 +5,4 @@ function handleClick() {
 }
 
 const button = document.getElementById('open');
-button.onclick = function() {
-  openMail();
-};
+button.onclick = handleClick;
