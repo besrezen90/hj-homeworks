@@ -22,37 +22,37 @@ let playList = [{
 let i = 0
 
 function nextSong() {
-    if (i < playList.length - 1) i++;
-    else i = 0;
-    audioTitle[0].title = playList[i].title;
-    audio[0].src = playList[i].src;
+    if (i < playList.length - 1) i++
+        else i = 0
+    audioTitle[0].title = playList[i].title
+    audio[0].src = playList[i].src
 }
 
 function backSong() {
-    if (i > 0) i--;
-    else i = playList.length - 1;
-    audioTitle[0].title = playList[i].title;
-    audio[0].src = playList[i].src;
+    if (i > 0) i--
+        else i = playList.length - 1
+    audioTitle[0].title = playList[i].title
+    audio[0].src = playList[i].src
 }
 
 function playAudio() {
     switch (this.classList.value) {
         case "back":
             backSong()
-            audio[0].play();
-            break;
+            audio[0].play()
+            break
         case "playstate":
-            mediaPlayer[0].classList.toggle("play") ? audio[0].play() : audio[0].pause();
-            break;
+            mediaPlayer[0].classList.toggle("play") ? audio[0].play() : audio[0].pause()
+            break
         case "stop":
-            mediaPlayer[0].classList.remove("play");
-            audio[0].pause();
-            audio[0].currentTime = 0;
-            break;
+            mediaPlayer[0].classList.remove("play")
+            audio[0].pause()
+            audio[0].currentTime = 0
+            break
         case "next":
             nextSong()
-            audio[0].play();
-            break;
+            audio[0].play()
+            break
     }
 }
 

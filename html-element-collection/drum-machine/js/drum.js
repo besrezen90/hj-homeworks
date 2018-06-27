@@ -25,7 +25,7 @@ function drumPlayAudio() {
     }
 }
 
-for (var drum of drums) {
+for (let drum of drums) {
     drum.onclick = drumPlayAudio
 }
 
