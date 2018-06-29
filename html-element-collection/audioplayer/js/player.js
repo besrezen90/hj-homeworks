@@ -39,7 +39,7 @@ function playAudio() {
     switch (this.classList.value) {
         case "back":
             backSong()
-            audio[0].play()
+            mediaPlayer[0].classList.contains("play") ? audio[0].play() : audio[0].pause()
             break
         case "playstate":
             mediaPlayer[0].classList.toggle("play") ? audio[0].play() : audio[0].pause()
@@ -51,7 +51,7 @@ function playAudio() {
             break
         case "next":
             nextSong()
-            audio[0].play()
+            mediaPlayer[0].classList.contains("play") ? audio[0].play() : audio[0].pause()
             break
     }
 }
