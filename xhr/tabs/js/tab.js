@@ -14,7 +14,7 @@ function showBlock(event) {
     xhr.addEventListener("loadend", end)
 
     xhr.open("GET",
-        event.currentTarget.href)
+        event.currentTarget.getAttribute('href'))
     xhr.send()
 
     function start() {
