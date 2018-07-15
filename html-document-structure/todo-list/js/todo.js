@@ -11,10 +11,8 @@ function getTodolist(container) {
     function transferInput() {
         let listitem = event.target.parentElement;
         if (listitem.parentElement === done) {
-            done.removeChild(listitem);
             undone.appendChild(listitem);
         } else if (listitem.parentElement === undone) {
-            undone.removeChild(listitem);
             done.appendChild(listitem);
         }
     }
