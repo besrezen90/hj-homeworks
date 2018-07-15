@@ -22,18 +22,18 @@ function Slider(container) {
         if (event.target === last) nextSlide = slides.lastElementChild;
         if (event.target === first) nextSlide = slides.firstElementChild;
         if (nextSlide === slides.lastElementChild) {
-            next.classList.add("disabled")
-            last.classList.add("disabled")
+            next.classList.add("disabled");
+            last.classList.add("disabled");
         } else {
-            next.classList.remove("disabled")
-            last.classList.remove("disabled")
+            next.classList.remove("disabled");
+            last.classList.remove("disabled");
         }
         if (nextSlide === slides.firstElementChild) {
-            prev.classList.add("disabled")
-            first.classList.add("disabled")
+            prev.classList.add("disabled");
+            first.classList.add("disabled");
         } else {
-            prev.classList.remove("disabled")
-            first.classList.remove("disabled")
+            prev.classList.remove("disabled");
+            first.classList.remove("disabled");
         }
         currentSlide.classList.remove('slide-current');
         nextSlide.classList.add('slide-current');
