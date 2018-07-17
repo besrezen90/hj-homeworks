@@ -1,6 +1,6 @@
 'use strict'
 
-function openArticle(container) {
+function controlTabs(container) {
     let section = container.querySelector('.tabs-content'),
         articles = section.children,
         tabsNav = container.querySelector('.tabs-nav'),
@@ -33,4 +33,4 @@ function openArticle(container) {
 }
 const tabs = document.getElementById('tabs');
 
-document.addEventListener('DOMContentLoaded', openArticle(tabs));
+document.addEventListener('DOMContentLoaded', controlTabs(tabs));

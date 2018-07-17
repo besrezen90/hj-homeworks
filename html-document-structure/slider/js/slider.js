@@ -18,7 +18,7 @@ function Slider(container) {
     function moveSlide(isForward) {
         if (event.target.classList.contains('disabled')) return
         const currentSlide = container.querySelector('.slide-current');
-        let nextSlide = isForward = isForward ? currentSlide.nextElementSibling : currentSlide.previousElementSibling;
+        let nextSlide = isForward ? currentSlide.nextElementSibling : currentSlide.previousElementSibling;
         if (event.target === last) nextSlide = slides.lastElementChild;
         if (event.target === first) nextSlide = slides.firstElementChild;
         if (nextSlide === slides.lastElementChild) {
