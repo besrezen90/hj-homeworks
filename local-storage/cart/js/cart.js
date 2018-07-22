@@ -44,10 +44,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if (color.isAvailable) {
                 colorBlock.classList.add(`available`)
                 input.disabled = false;
+                input.checked = true;
+
             } else {
                 colorBlock.classList.add(`soldout`)
                 input.disabled = true;
             }
+
 
             colorSwatch.appendChild(colorBlock)
         }
@@ -88,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (size.isAvailable) {
                 sizeBlock.classList.add(`available`)
                 input.disabled = false;
+                input.checked = true;
             } else {
                 sizeBlock.classList.add(`soldout`)
                 input.disabled = true;
@@ -109,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function onLoadCart() {
         const quickCart = document.getElementById('quick-cart');
         let serverRequest = JSON.parse(cart.responseText);
+
         for (let item of serverRequest) {
 
             const itemBlock = document.createElement('div');
@@ -145,11 +150,9 @@ document.addEventListener('DOMContentLoaded', function () {
             itemBlock.appendChild(removeSpan);
             removeSpan.classList.add('quick-cart-product-remove remove');
             removeSpan.dataset.id = item.id;
-
             quickCart.appendChild(itemBlock)
 
         }
-
 
         const cartLink = document.createElement('a');
         quickCart.appendChild(cartLink);
@@ -170,11 +173,52 @@ document.addEventListener('DOMContentLoaded', function () {
         const span2 = document.createElement('span');
         span.appendChild(span2);
         span2.setAttribute('id', `quick-cart-price`);
-        span.textContent = '$800.00';
-
-
-        console.log(serverRequest[0])
+        span2.textContent = '$800.00';
     }
+
+    const addForm = document.getElementById('AddToCartForm');
+
+    function addToCart(event) {
+
+        event.preventDefault()
+
+        const formData = new FormData(event.target);
+        formData.append('productId', `${event.target.getAttribute('data-product-id')}`)
+
+
+        const xhr = new XMLHttpRequest();
+        xhr.addEventListener('load', onLoad);
+        xhr.open('POST', 'https://neto-api.herokuapp.com/cart');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(formData);
+
+        function onLoad() {
+            const serverRequest = JSON.parse(xhr.responseText);
+            console.log(serverRequest)
+        }
+    }
+
+    addForm.addEventListener('submit', addToCart);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 })
 
@@ -213,111 +257,111 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    // let getColors = fetch('https://neto-api.herokuapp.com/cart/colors') //Запрос цвета
-    //     .then((res) => {
-    //         if (200 <= res.status && res.status < 300) {
-    //             return res;
-    //         }
-    //         throw new Error(response.statusText);
-    //     })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //         const colorSwatch = document.getElementById('colorSwatch');
+// let getColors = fetch('https://neto-api.herokuapp.com/cart/colors') //Запрос цвета
+//     .then((res) => {
+//         if (200 <= res.status && res.status < 300) {
+//             return res;
+//         }
+//         throw new Error(response.statusText);
+//     })
+//     .then((res) => res.json())
+//     .then((data) => {
+//         const colorSwatch = document.getElementById('colorSwatch');
 
-    //         for (let color of data) {
+//         for (let color of data) {
 
-    //             const colorBlock = document.createElement('div');
-    //             colorBlock.dataset.value = color.type;
-    //             colorBlock.classList.add(`swatch-element`)
-    //             colorBlock.classList.add(`color`)
-    //             colorBlock.classList.add(`${color.type}`)
-    //             const tooltip = document.createElement('div');
-    //             colorBlock.appendChild(tooltip);
-    //             tooltip.classList.add('tooltip');
-    //             tooltip.textContent = color.title;
-    //             const input = document.createElement('input');
-    //             colorBlock.appendChild(input);
-    //             input.setAttribute('quickbeam', 'color');
-    //             input.setAttribute('id', `swatch-1-${color.type}`);
-    //             input.setAttribute('type', 'radio');
-    //             input.setAttribute('name', 'color');
-    //             input.setAttribute('value', `${color.type}`);
-    //             const label = document.createElement('label');
-    //             colorBlock.appendChild(label);
-    //             label.setAttribute('for', `swatch-1-${color.type}`);
-    //             label.setAttribute('style', `border-color: ${color.type}`);
-    //             const span = document.createElement('span');
-    //             label.appendChild(span);
-    //             span.setAttribute('style', `background-color: ${color.type}`);
-    //             const img = document.createElement('img');
-    //             label.appendChild(img);
-    //             img.classList.add("crossed-out");
-    //             img.setAttribute('src', "https://neto-api.herokuapp.com/hj/3.3/cart/soldout.png?10994296540668815886");
-
-
-    //             if (color.isAvailable) {
-    //                 colorBlock.classList.add(`available`)
-    //                 input.disabled = false;
-    //             } else {
-    //                 colorBlock.classList.add(`soldout`)
-    //                 input.disabled = true;
-    //             }
-
-    //             colorSwatch.appendChild(colorBlock)
-    //         }
-
-    //     })
-    //     .catch((error) => {
-    //         console.log(error)
-    //     });
+//             const colorBlock = document.createElement('div');
+//             colorBlock.dataset.value = color.type;
+//             colorBlock.classList.add(`swatch-element`)
+//             colorBlock.classList.add(`color`)
+//             colorBlock.classList.add(`${color.type}`)
+//             const tooltip = document.createElement('div');
+//             colorBlock.appendChild(tooltip);
+//             tooltip.classList.add('tooltip');
+//             tooltip.textContent = color.title;
+//             const input = document.createElement('input');
+//             colorBlock.appendChild(input);
+//             input.setAttribute('quickbeam', 'color');
+//             input.setAttribute('id', `swatch-1-${color.type}`);
+//             input.setAttribute('type', 'radio');
+//             input.setAttribute('name', 'color');
+//             input.setAttribute('value', `${color.type}`);
+//             const label = document.createElement('label');
+//             colorBlock.appendChild(label);
+//             label.setAttribute('for', `swatch-1-${color.type}`);
+//             label.setAttribute('style', `border-color: ${color.type}`);
+//             const span = document.createElement('span');
+//             label.appendChild(span);
+//             span.setAttribute('style', `background-color: ${color.type}`);
+//             const img = document.createElement('img');
+//             label.appendChild(img);
+//             img.classList.add("crossed-out");
+//             img.setAttribute('src', "https://neto-api.herokuapp.com/hj/3.3/cart/soldout.png?10994296540668815886");
 
 
-    // let getSize = fetch('https://neto-api.herokuapp.com/cart/sizes') //Запрос размера
-    //     .then((res) => {
-    //         if (200 <= res.status && res.status < 300) {
-    //             return res;
-    //         }
-    //         throw new Error(response.statusText);
-    //     })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //         const sizeSwatch = document.getElementById('sizeSwatch');
-    //         for (let size of data) {
+//             if (color.isAvailable) {
+//                 colorBlock.classList.add(`available`)
+//                 input.disabled = false;
+//             } else {
+//                 colorBlock.classList.add(`soldout`)
+//                 input.disabled = true;
+//             }
 
-    //             const sizeBlock = document.createElement('div');
-    //             sizeBlock.dataset.value = size.type;
-    //             sizeBlock.classList.add(`swatch-element`)
-    //             sizeBlock.classList.add(`plain`)
-    //             sizeBlock.classList.add(`${size.type}`)
+//             colorSwatch.appendChild(colorBlock)
+//         }
 
-    //             const input = document.createElement('input');
-    //             sizeBlock.appendChild(input);
-    //             input.setAttribute('id', `swatch-0-${size.type}`);
-    //             input.setAttribute('type', 'radio');
-    //             input.setAttribute('name', 'size');
-    //             input.setAttribute('value', `${size.type}`);
-    //             const label = document.createElement('label');
-    //             sizeBlock.appendChild(label);
-    //             label.setAttribute('for', `swatch-0-${size.type}`);
-    //             label.textContent = size.title;
+//     })
+//     .catch((error) => {
+//         console.log(error)
+//     });
 
-    //             const img = document.createElement('img');
-    //             label.appendChild(img);
-    //             img.classList.add("crossed-out");
-    //             img.setAttribute('src', "https://neto-api.herokuapp.com/hj/3.3/cart/soldout.png?10994296540668815886");
 
-    //             if (size.isAvailable) {
-    //                 sizeBlock.classList.add(`available`)
-    //                 input.disabled = false;
-    //             } else {
-    //                 sizeBlock.classList.add(`soldout`)
-    //                 input.disabled = true;
-    //             }
+// let getSize = fetch('https://neto-api.herokuapp.com/cart/sizes') //Запрос размера
+//     .then((res) => {
+//         if (200 <= res.status && res.status < 300) {
+//             return res;
+//         }
+//         throw new Error(response.statusText);
+//     })
+//     .then((res) => res.json())
+//     .then((data) => {
+//         const sizeSwatch = document.getElementById('sizeSwatch');
+//         for (let size of data) {
 
-    //             sizeSwatch.appendChild(sizeBlock)
-    //         }
+//             const sizeBlock = document.createElement('div');
+//             sizeBlock.dataset.value = size.type;
+//             sizeBlock.classList.add(`swatch-element`)
+//             sizeBlock.classList.add(`plain`)
+//             sizeBlock.classList.add(`${size.type}`)
 
-    //     })
-    //     .catch((error) => {
-    //         console.log(error)
-    //     });
+//             const input = document.createElement('input');
+//             sizeBlock.appendChild(input);
+//             input.setAttribute('id', `swatch-0-${size.type}`);
+//             input.setAttribute('type', 'radio');
+//             input.setAttribute('name', 'size');
+//             input.setAttribute('value', `${size.type}`);
+//             const label = document.createElement('label');
+//             sizeBlock.appendChild(label);
+//             label.setAttribute('for', `swatch-0-${size.type}`);
+//             label.textContent = size.title;
+
+//             const img = document.createElement('img');
+//             label.appendChild(img);
+//             img.classList.add("crossed-out");
+//             img.setAttribute('src', "https://neto-api.herokuapp.com/hj/3.3/cart/soldout.png?10994296540668815886");
+
+//             if (size.isAvailable) {
+//                 sizeBlock.classList.add(`available`)
+//                 input.disabled = false;
+//             } else {
+//                 sizeBlock.classList.add(`soldout`)
+//                 input.disabled = true;
+//             }
+
+//             sizeSwatch.appendChild(sizeBlock)
+//         }
+
+//     })
+//     .catch((error) => {
+//         console.log(error)
+//     });
