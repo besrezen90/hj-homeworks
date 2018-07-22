@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function onLoad() {
             let serverRequest = JSON.parse(xhr.responseText);
-            console.log(serverRequest)
             if (serverRequest.error) {
                 event.target.querySelector('.error-message').textContent = serverRequest.message;
                 return;
