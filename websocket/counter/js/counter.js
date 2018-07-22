@@ -11,31 +11,4 @@ document.addEventListener('DOMContentLoaded', function () {
     connection.addEventListener('close', event => {
         connection.close(1000, 'Работа закончена');
     });
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 })
