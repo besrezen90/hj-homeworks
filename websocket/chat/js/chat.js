@@ -55,9 +55,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var d = new Date();
         let datetext = d.getHours() + ":" + d.getMinutes();
         let newMessage = messagePersonal.cloneNode(true);
-        console.log(messageInput.value)
         newMessage.querySelector('.message-text').textContent = messageInput.value;
         newMessage.querySelector('.timestamp').textContent = datetext;
+        if (messageInput.value.length === 0) return;
         connection.send(messageInput.value)
         messagesContent.appendChild(newMessage)
         messageInput.value = '';
