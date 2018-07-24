@@ -1,14 +1,6 @@
 'use strict';
 
-
-function addScript(url) {
-    let script = document.createElement('script');
-    script.async = true;
-    script.src = url + '?&callback=succsess';
-    document.head.appendChild(script);
-}
-
-function succsess(data) {
+function showInfo(data) {
     document.querySelector('[data-wallpaper]').setAttribute('src', data.wallpaper)
     document.querySelector('[data-username]').textContent = data.username;
     document.querySelector('[data-description]').textContent = data.description;
@@ -16,8 +8,18 @@ function succsess(data) {
     document.querySelector('[data-tweets]').value = data.tweets;
     document.querySelector('[data-followers]').value = data.followers;
     document.querySelector('[data-following]').value = data.following;
-    
 }
 
-addScript('https://neto-api.herokuapp.com/twitter/jsonp');
+function loadData(url) {
 
+    const functionName = 'randNameFunc' + String((Math.random() * 10000).toFixed());
+    return new Promise((done) => {
+        window[functionName] = done;
+        const script = document.createElement('script')
+        script.src = `${url}?jsonp=${functionName}`
+        document.body.appendChild(script);
+    });
+}
+
+loadData('https://neto-api.herokuapp.com/twitter/jsonp')
+    .then(showInfo)
