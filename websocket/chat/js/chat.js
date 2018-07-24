@@ -74,30 +74,4 @@ document.addEventListener('DOMContentLoaded', function () {
         chatStatus.textContent = chatStatus.dataset.offline
         connection.close(1000, 'Работа закончена');
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 })
