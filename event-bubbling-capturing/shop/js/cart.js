@@ -1,23 +1,17 @@
 'use strict';
 
 function controlBuy(container) {
+    container.addEventListener('click', clickAddToCart);
 
-    let buttons = container.querySelectorAll('.add-to-cart');
-    function tabButton(event) {
+    function clickAddToCart(event) {
+        if(!event.target.classList.contains('add-to-cart')) return
         event.preventDefault();
-        event.stopPropagation();
         const item = {
             title: event.target.dataset.title,
             price: event.target.dataset.price
         }
         addToCart(item)
     }
-
-    Array.from(buttons).forEach(button => button.addEventListener('click', tabButton));
-
-    container.addEventListener('DOMNodeInserted', function(event){
-        event.target.querySelector('.add-to-cart').addEventListener('click', tabButton)
-    })
 }
 
 
