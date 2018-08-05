@@ -41,113 +41,145 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
 
-        //Создание HTML Элемента из объекта
-        function createElement(block) {
-            if ((block === undefined) || (block === null) || (block === false)) {
-                return document.createTextNode('');
-            }
-            if ((typeof block === 'string') || (typeof block === 'number') || (block === true)) {
-                return document.createTextNode(block.toString());
-            }
-            if (Array.isArray(block)) {
-                return block.reduce((f, elem) => {
-                    f.appendChild(createElement(elem));
-
-                    return f;
-                }, document.createDocumentFragment());
-            }
-
-            const element = document.createElement(block.block || 'div');
-
-            [].concat(block.cls || []).forEach(
-                className => element.classList.add(className)
-            );
-
-            if (block.attrs) {
-                Object.keys(block.attrs).forEach(
-                    key => element.setAttribute(key, block.attrs[key])
-                );
-            }
-
-            if (block.content) element.appendChild(createElement(block.content));
-
-            return element;
+    //Создание HTML Элемента из объекта
+    function createElement(block) {
+        if ((block === undefined) || (block === null) || (block === false)) {
+            return document.createTextNode('');
         }
-        //Создание объекта из сохраненной фотографии (в аргумент падает сохраненная фотография)
-        function createPhotoFromList(photo) {
-            return {
-                block: 'figure',
-                content: [{
-                    block: 'img',
-                    attrs: {src: photo}
-                }, {
-                    block: 'figcaption',
-                    content: [{
-                        block: 'a',
-                        attrs: {href: photo, download: 'что-то'},
-                        content: [{
-                            block: 'i',
-                            cls: 'material-icons',
-                            content: ['file_download']
-                        }]
-                    }, {
-                        block: 'a',
-                        content: [{
-                            block: 'i',
-                            cls: 'material-icons',
-                            content: ['file_upload']
-                        }]
-                    }, {
-                        block: 'a',
-                        content: [{
-                            block: 'i',
-                            cls: 'material-icons',
-                            content: ['delete']
-                        }]
-                    }]
+        if ((typeof block === 'string') || (typeof block === 'number') || (block === true)) {
+            return document.createTextNode(block.toString());
+        }
+        if (Array.isArray(block)) {
+            return block.reduce((f, elem) => {
+                f.appendChild(createElement(elem));
 
+                return f;
+            }, document.createDocumentFragment());
+        }
+
+        const element = document.createElement(block.block || 'div');
+
+        [].concat(block.cls || []).forEach(
+            className => element.classList.add(className)
+        );
+
+        if (block.attrs) {
+            Object.keys(block.attrs).forEach(
+                key => element.setAttribute(key, block.attrs[key])
+            );
+        }
+
+        if (block.content) element.appendChild(createElement(block.content));
+
+        return element;
+    }
+    //Создание объекта из сохраненной фотографии (в аргумент падает сохраненная фотография)
+    function createPhotoFromList(photo) {
+        return {
+            block: 'figure',
+            content: [{
+                block: 'img',
+                attrs: {
+                    src: photo
+                }
+            }, {
+                block: 'figcaption',
+                content: [{
+                    block: 'a',
+                    attrs: {
+                        href: photo,
+                        download: 'snapshot.png'
+                    },
+                    content: [{
+                        block: 'i',
+                        cls: 'material-icons',
+                        content: ['file_download']
+                    }]
+                }, {
+                    block: 'a',
+                    content: [{
+                        block: 'i',
+                        cls: 'material-icons',
+                        content: ['file_upload']
+                    }]
+                }, {
+                    block: 'a',
+                    content: [{
+                        block: 'i',
+                        cls: 'material-icons',
+                        content: ['delete']
+                    }]
                 }]
 
-               
-           }
-       };
-        
+            }]
 
-        function takeSnapshot() {
-
-            var hidden_canvas = document.createElement('canvas'),
-                video = document.querySelector('video'),
-                /*                 image = document.querySelector('img.photo'), */
-
-                // Получаем размер видео элемента.
-                width = video.videoWidth,
-                height = video.videoHeight,
-
-                // Объект для работы с canvas.
-                context = hidden_canvas.getContext('2d');
-
-
-            // Установка размеров canvas идентичных с video.
-            hidden_canvas.width = width;
-            hidden_canvas.height = height;
-
-            // Отрисовка текущего кадра с video в canvas.
-            context.drawImage(video, 0, 0, width, height);
-
-            // Преобразование кадра в изображение dataURL.
-            var imageDataURL = hidden_canvas.toDataURL('image/png');
-
-
-            document.querySelector('.list').appendChild(createElement(createPhotoFromList(imageDataURL)))
 
         }
+    };
+
+
+    function takeSnapshot() {
+
+        var hidden_canvas = document.createElement('canvas'),
+            video = document.querySelector('video'),
+
+
+            // Получаем размер видео элемента.
+            width = video.videoWidth,
+            height = video.videoHeight,
+
+            // Объект для работы с canvas.
+            context = hidden_canvas.getContext('2d');
+
+
+        // Установка размеров canvas идентичных с video.
+        hidden_canvas.width = width;
+        hidden_canvas.height = height;
+
+        // Отрисовка текущего кадра с video в canvas.
+        context.drawImage(video, 0, 0, width, height);
+
+        // Преобразование кадра в изображение dataURL.
+        var imageDataURL = hidden_canvas.toDataURL('image/png');
+
+        const newPhotoList = createElement(createPhotoFromList(imageDataURL));
+
+
+
+        newPhotoList.addEventListener('click', event => {
+            if (event.target.textContent === 'delete') {
+                event.currentTarget.remove()
+            }
+            if (event.target.textContent === 'file_upload') {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'https://neto-api.herokuapp.com/photo-booth');
+                xhr.setRequestHeader('Content-Type', 'multipart/form-data', 'boundary=;');
+                // xhr.send(event.currentTarget.querySelector('img'))
+                const fromData = new FormData()
+                fromData.append('image', event.currentTarget.querySelector('img').src)
+                console.log(event.currentTarget.querySelector('img').src)
 
 
 
 
-/* В функции createElement на возвращаемый объект element повесить событие для скачивания, удаления и загрузки фотографий на сервер */
+                xhr.send(fromData)
+
+                xhr.addEventListener('load', () => {
+                    console.log(xhr.responseText)
+                })
+            }
+        })
+
+        document.querySelector('.list').appendChild(newPhotoList) //Заменить на инсерт бефор
+
+    }
 
 
+
+
+    /* В функции createElement на возвращаемый объект element повесить событие для скачивания, удаления и загрузки фотографий на сервер */
+
+    // const itemElement = document.querySelectorAll('.')
 
 
 
