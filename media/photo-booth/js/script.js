@@ -151,21 +151,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 event.currentTarget.remove()
             }
             if (event.target.textContent === 'file_upload') {
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', 'https://neto-api.herokuapp.com/photo-booth');
-                xhr.setRequestHeader('Content-Type', 'multipart/form-data', 'boundary=;');
-                // xhr.send(event.currentTarget.querySelector('img'))
                 const fromData = new FormData()
-                fromData.append('image', event.currentTarget.querySelector('img').src)
-                console.log(event.currentTarget.querySelector('img').src)
-
-
-
-
-                xhr.send(fromData)
-
-                xhr.addEventListener('load', () => {
-                    console.log(xhr.responseText)
+                hidden_canvas.toBlob(blob => {
+                    fromData.append('image', blob);
+                    fetch('https://neto-api.herokuapp.com/photo-booth', {
+                            method: 'post',
+                            body: fromData
+                        })
+                        .then(console.log);
                 })
             }
         })
@@ -174,12 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-
-
-
-    /* В функции createElement на возвращаемый объект element повесить событие для скачивания, удаления и загрузки фотографий на сервер */
-
-    // const itemElement = document.querySelectorAll('.')
 
 
 
