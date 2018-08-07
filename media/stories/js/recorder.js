@@ -37,41 +37,49 @@ function createThumbnail(video) {
 }
 
 function record(app) {
-  return new Promise((done, fail) => {
-    app.mode = 'preparing';
-    navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-        audio: false
-      })
-      .then(stream => {
-        app.mode = 'recording';
-        app.preview.srcObject = stream;
-        let recorder = new MediaRecorder(stream);
+  return new Promise((resolved, rejected) => {
+      app.mode = 'preparing';
+      let chunks = [];
+      let recorder = null;
 
-        let chunks = [];
+      navigator.mediaDevices
+        .getUserMedia({
+          video: true,
+          audio: false
+        })
+        .then(stream => {
+          app.mode = 'recording';
+          app.preview.srcObject = stream;
+          recorder = new MediaRecorder(stream);
 
-        recorder.addEventListener('dataavailable', (e) => chunks.push(e.data));
-        recorder.addEventListener('stop', (e) => {
-          // склеиваем записаное видео
-          const recorded = new Blob(chunks, {
-            'type': recorder.mimeType
+          recorder.addEventListener('dataavailable', (e) => chunks
+            .push(e.data));
+
+          recorder.addEventListener('stop', (e) => {
+            const recorded = new Blob(chunks, {
+              'type': recorder.mimeType
+            });
+            chunks = null;
+            recorder = stream = null;
+            createThumbnail(recorded).then(res => {
+              resolved({
+                frame: res,
+                video: recorded
+              });
+            })
           });
-          // избегаем утечки памяти
-          chunks = null;
-          // очищаем поток и рекордер
-          recorder = stream = null;
-          // проигрываем записанное видео
-          videoEl.srcObject = stream;
+
           recorder.start(1000);
-        });
 
-      })
-
-
-    done(videoEl.src)
-    setTimeout(() => {
-      fail('Не удалось записать видео');
-    }, app.limit);
-  });
+          setTimeout(() => {
+            recorder.stop();
+            app.preview.srcObject = null;
+            stream.getTracks().forEach(track => track.stop());
+          }, app.limit);
+        })
+    })
+    .catch(err => {
+      console.warn(err);
+      app.mode = 'error';
+    })
 }
