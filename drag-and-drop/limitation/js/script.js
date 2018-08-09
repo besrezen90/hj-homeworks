@@ -9,6 +9,7 @@ function textareaFocusIn() {
 
 function textareaFocusOut(event) {
     document.querySelector('.block').classList.remove('active')
+    if(document.querySelector('.message').classList.contains('view')) document.querySelector('.message').classList.remove('view')
     return event
 }
 
@@ -31,5 +32,5 @@ textarea.addEventListener('focus', textareaFocusIn)
 textarea.addEventListener('focusout', textareaFocusOut)
 
 textarea.addEventListener('input', debounce(() => {
-    textareaFocusOut();
+    document.querySelector('.block').classList.remove('active');
 }, 2000));
